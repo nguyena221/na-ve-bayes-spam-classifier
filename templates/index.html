@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Naive Bayes Spam Classifier</title>
+    <title>Spam Classifier</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Naive Bayes Spam Classifier</h1>
+<div class="container">
+    <h1>Naive Bayes Spam Classifier</h1>
 
-        <p>
-            Type a message below, and the classifier will predict whether it is spam or ham.
-        </p>
+    <h2>Test a Message</h2>
+    <form method="POST">
+        <textarea name="message" placeholder="Enter a message..."></textarea>
+        <button type="submit" name="classify">Classify</button>
+    </form>
 
-        <form method="POST">
-            <textarea name="message" placeholder="Enter a message..." required>{{ message }}</textarea>
-            <button type="submit">Classify Message</button>
-        </form>
+    {% if prediction %}
+        <div class="result">
+            <h3>Prediction: {{ prediction.upper() }}</h3>
+            <p>Spam: {{ probabilities["spam"] }}%</p>
+            <p>Ham: {{ probabilities["ham"] }}%</p>
+        </div>
+    {% endif %}
 
-        {% if prediction %}
-            <div class="result">
-                <h2>Prediction: {{ prediction.upper() }}</h2>
+    <h2>Add Your Own Training Data (Warning of bad data)</h2>
+    <form method="POST">
+        <input type="text" name="new_message" placeholder="Enter message" required>
+        <select name="new_label">
+            <option value="spam">Spam</option>
+            <option value="ham">Ham</option>
+        </select>
+        <button type="submit" name="add_data">Add Data</button>
+    </form>
 
-                <p>Spam probability: {{ probabilities["spam"] }}%</p>
-                <p>Ham probability: {{ probabilities["ham"] }}%</p>
-            </div>
-        {% endif %}
-    </div>
+    <h2>Training Data (Sample)</h2>
+    <table border="1">
+        <tr>
+            <th>Message</th>
+            <th>Label</th>
+        </tr>
+        {% for msg, label in data %}
+        <tr>
+            <td>{{ msg }}</td>
+            <td>{{ label }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
 </body>
 </html>
